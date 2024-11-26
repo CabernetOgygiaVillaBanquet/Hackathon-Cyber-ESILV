@@ -1,0 +1,68 @@
+# CVE-2017-0144: The Vulnerability Behind WannaCry
+
+## Introduction
+CVE-2017-0144 is one of the most notorious vulnerabilities in recent history. Exploited by the infamous WannaCry ransomware, it highlighted critical weaknesses in software security and demonstrated the potentially devastating impact of cyberattacks on a global scale. This document explores the discovery of CVE-2017-0144, the major cyberattacks that exploited it, and the subsequent measures taken to mitigate its effects.
+
+## Technical Details of CVE-2017-0144
+### CPE, CWE, and CAPEC Information
+CVE-2017-0144 is associated with various Common Platform Enumeration (CPE), Common Weakness Enumeration (CWE), and Common Attack Pattern Enumeration and Classification (CAPEC) entries that provide additional context on affected products, weaknesses, and potential attack vectors.
+
+- **CPE (Common Platform Enumeration)**: CVE-2017-0144 affects several versions of Microsoft Windows, including Windows XP, Windows 7, Windows 8, and Windows Server versions. These CPE entries highlight the widespread impact of the vulnerability, as it affected legacy systems that were often still in use in many organizations.
+
+- **CWE-20 (Improper Input Validation)**: The vulnerability is classified under CWE-20, which relates to improper input validation. The SMBv1 protocol failed to properly validate the input it received, allowing attackers to send specially crafted packets that could lead to remote code execution. This failure in input validation underscores the importance of ensuring robust input handling mechanisms in network protocols.
+
+- **CAPEC-116 (Forced Browsing)**: The vulnerability is also linked to CAPEC-116, which describes forced browsing attacks where attackers exploit vulnerabilities to access parts of a system they shouldn't have access to. EternalBlue leveraged this type of vulnerability to force access and execute arbitrary code on unpatched systems.
+### CVSS Overview
+CVE-2017-0144 has a Common Vulnerability Scoring System (CVSS) score of 8.1, indicating a high severity level. The vulnerability allowed for remote code execution, making it particularly dangerous. Below are the key components of its CVSS breakdown:
+
+- **Attack Vector (AV)**: Network (N) - The vulnerability could be exploited remotely over a network connection, increasing the likelihood of exploitation.
+- **Attack Complexity (AC)**: Low (L) - The attack complexity was low, meaning that an attacker did not need specialized conditions or knowledge to exploit the vulnerability effectively.
+- **Privileges Required (PR)**: None (N) - Exploiting CVE-2017-0144 did not require any prior privileges, allowing attackers to target vulnerable systems without any authentication.
+- **User Interaction (UI)**: None (N) - No user interaction was required, making it easier for the exploit to propagate autonomously.
+- **Confidentiality, Integrity, and Availability (CIA) Impact**: High (H) - The vulnerability could lead to complete compromise of confidentiality, integrity, and availability, allowing attackers to fully control affected systems.
+
+## Discovery of the Vulnerability
+### 1.1 The SMBv1 Protocol
+The vulnerability known as CVE-2017-0144 was found in Microsoft's Server Message Block (SMB) protocol, specifically in the outdated version SMBv1. SMB is a network communication protocol used for sharing files, printers, and other resources between computers. SMBv1, initially introduced in the 1980s, contained numerous flaws that, if left unpatched, could be exploited for remote code execution.
+
+### 1.2 Discovery by the NSA and Leak by Shadow Brokers
+The CVSS score, along with CPE, CWE, and CAPEC classifications, highlighted the critical risk level of CVE-2017-0144, emphasizing the importance of timely patching and security measures to mitigate potential exploitation. However, the leak of the EternalBlue exploit by Shadow Brokers made these mitigations even more urgent.
+The CVSS score highlighted the critical risk level of CVE-2017-0144, emphasizing the importance of timely patching and security measures to mitigate potential exploitation. However, the leak of the EternalBlue exploit by Shadow Brokers made these mitigations even more urgent.
+The vulnerability was initially discovered by the U.S. National Security Agency (NSA). It developed an exploit known as "EternalBlue" to target this vulnerability for its own surveillance purposes. However, in 2017, a hacking group called "Shadow Brokers" leaked the exploit, exposing it to the broader public. This leak became the catalyst for one of the most widespread cyberattacks the world had ever seen.
+
+## WannaCry Ransomware Attack
+### 2.1 Attack Overview
+In May 2017, the WannaCry ransomware attack leveraged the EternalBlue exploit to spread rapidly across the globe. The ransomware encrypted files on infected computers and demanded a Bitcoin ransom in exchange for the decryption key. Within a matter of days, WannaCry had affected over 200,000 computers in more than 150 countries, causing widespread disruption.
+
+### 2.2 Targets and Impact
+WannaCry targeted a wide range of sectors, including healthcare, transportation, and government institutions. The National Health Service (NHS) in the United Kingdom was particularly hard-hit, with numerous hospitals and clinics unable to access critical patient data. This led to the cancellation of medical appointments and surgeries, putting lives at risk. Many other organizations, from private corporations to public services, were similarly affected, underscoring the far-reaching consequences of unpatched software vulnerabilities.
+
+### 2.3 Propagation Method
+The EternalBlue exploit allowed WannaCry to propagate without user interaction, making it highly effective in spreading across networks. Once a single computer was compromised, the ransomware rapidly scanned for other vulnerable systems, exploiting CVE-2017-0144 to gain unauthorized access. This "worm-like" behavior turned WannaCry into a particularly devastating cyberweapon.
+
+## Response and Mitigation
+### 3.1 Microsoft's Patch
+Microsoft responded to the threat by releasing a security patch for CVE-2017-0144 in March 2017, two months before the WannaCry attack. The patch was intended to fix the vulnerability in SMBv1, but many organizations failed to apply it, leaving their systems exposed. Microsoft also took the unusual step of releasing patches for unsupported versions of Windows, such as Windows XP, to mitigate the damage caused by WannaCry.
+
+### 3.2 Kill Switch Activation
+A major turning point in the WannaCry attack was the accidental discovery of a "kill switch" by a security researcher known as MalwareTech. By registering a specific domain name embedded in the ransomware code, the researcher was able to halt the spread of WannaCry, preventing further infections. This kill switch provided temporary relief, but variants of the ransomware soon emerged without such a fail-safe.
+
+### 3.3 Lessons Learned
+The WannaCry attack served as a wake-up call for organizations worldwide, emphasizing the importance of regular software updates and patch management. It highlighted the critical need for better cybersecurity practices, including the deprecation of outdated protocols like SMBv1 and the adoption of more robust defense mechanisms.
+
+## NotPetya and Other Exploits
+### 4.1 NotPetya's Connection
+Not long after WannaCry, another ransomware known as NotPetya emerged, exploiting the same CVE-2017-0144 vulnerability. Unlike WannaCry, NotPetya was more focused on disruption rather than financial gain. It masqueraded as ransomware but was ultimately designed to wipe data, causing irreversible damage to the systems it infected. NotPetya affected major corporations, including Maersk and Merck, leading to billions of dollars in damages.
+
+### 4.2 EternalBlue in Other Attacks
+The EternalBlue exploit continued to be used in various other cyberattacks, including cryptocurrency mining campaigns and other forms of ransomware. The widespread availability of the exploit led to numerous threat actors taking advantage of it, demonstrating how the release of a powerful exploit can have long-term consequences in the cyber landscape.
+
+## Mitigation and Current Status
+### 5.1 Deprecation of SMBv1
+Following the WannaCry attack, many organizations and governments moved to deprecate the use of SMBv1 entirely. Microsoft recommended disabling SMBv1 on all systems, and newer versions of Windows now come with SMBv1 disabled by default. This step has been crucial in reducing the attack surface available to exploits like EternalBlue.
+
+### 5.2 Ongoing Security Practices
+The cybersecurity community has learned valuable lessons from CVE-2017-0144. Emphasizing the importance of timely patching, system administrators and organizations now prioritize patch management to mitigate similar threats. In addition, advances in network segmentation and intrusion detection systems (IDS) have helped organizations defend against similar vulnerabilities.
+
+## Conclusion
+CVE-2017-0144 and the subsequent WannaCry attack serve as a powerful reminder of the dangers posed by unpatched software vulnerabilities. The ripple effects of the exploit have been felt across multiple sectors, causing financial loss, operational disruption, and reputational damage. The lessons learned from this incident have led to a greater emphasis on proactive cybersecurity measures, ensuring that vulnerabilities are addressed before they can be exploited by malicious actors. The story of CVE-2017-0144 is not just about a vulnerability—it is a testament to the importance of vigilance, collaboration, and resilience in the face of evolving cyber threats.

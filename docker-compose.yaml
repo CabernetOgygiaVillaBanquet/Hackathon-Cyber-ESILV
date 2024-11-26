@@ -1,0 +1,110 @@
+# docker logs -f container_name_or_id
+# docker exec -it container_name_or_id /bin/sh
+# docker restart container_name_or_id
+
+services:
+  jupyter:
+    image: l_jupyter:V1
+    container_name: jupyter
+    volumes:
+      - ./data_jupyter/work:/home/jovyan/work
+      - ./data_jupyter/datasets:/home/jovyan/datasets
+      - ./data_jupyter/modules:/home/jovyan/modules
+      - ./data_neo4j/import:/home/jovyan/import
+      - ./data_jupyter/startup_hooks:/usr/local/bin/start-notebook.d/
+    user: root
+    ports:
+      - 8888:8888
+    environment:
+      - JUPYTER_TOKEN=easy
+      - GRANT_SUDO=yes
+      - NB_UID=7474
+      - NB_GID=7474
+      - CHOWN_HOME=yes
+      - CHOWN_HOME_OPTS=-R
+    working_dir: /home/jovyan
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - ollama-docker
+#
+  neo4j:
+    image: neo4j:5.23-community-bullseye
+    container_name: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_AUTH=neo4j/strongPassword1
+      - NEO4J_server_memory_heap_initial__size=4G
+      - NEO4J_server_memory_heap_max__size=6G
+      - NEO4J_dbms_memory_pagecache_size=4G
+      - NEO4J_dbms_connector_bolt_thread__pool__max__size=400
+      - NEO4J_dbms_connector_http_thread__pool__max__size=100
+      - NEO4J_dbms_workers_max__parallel=4
+      - NEO4J_PLUGINS=["apoc","apoc-extended"]
+      - NEO4J_server_config_strict__validation_enabled=false
+      - NEO4J_db_tx__log_rotation_retention__policy=false
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_dbms_security_procedures_allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.*
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=false
+      - NEO4J_cypher_lenient__create__relationship = true
+    volumes:
+      - ./data_neo4j/data:/data
+      - ./data_neo4j/logs:/logs
+      - ./data_neo4j/import:/var/lib/neo4j/import
+      - ./data_neo4j/plugins:/plugins
+      - ./data_neo4j/config:/config
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - ollama-docker
+#
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - 11434:11434
+      - 7869:11434
+    volumes:
+      - ./data_ollama/code:/code
+      - ./data_ollama/root:/root/.ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - ollama-docker
+#
+  ollama-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: ollama-webui
+    volumes:
+      - ./data_ollama/webui:/app/backend/data
+    depends_on:
+      - ollama
+    ports:
+      - 8080:8080
+    environment: 
+      - OLLAMA_BASE_URLS=http://host.docker.internal:7869 # comma-separated Ollama hosts
+      - ENV=dev
+      - WEBUI_AUTH=False
+      - WEBUI_NAME=valiantlynx AI
+      - WEBUI_URL=http://localhost:8080
+      - WEBUI_SECRET_KEY=t0p-s3cr3t
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    networks:
+      - ollama-docker
+#
+networks:
+  ollama-docker:
+    external: false
